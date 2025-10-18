@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "664422940578",
+    "project_id": "yo-yo-awesome-project",
+    "storage_bucket": "yo-yo-awesome-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664422940578:android:dedacd247c69c977567cfb",
+        "android_client_info": {
+          "package_name": "com.example.untitled"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD_p3RtODvfV7Ku38LrP_8S-c_8srYw4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
