@@ -5,11 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/database_service.dart';
 import 'checklist_form_screen.dart';
 
-// --- 1. IMPORTAR LA NUEVA PANTALLA DE DETALLE ---
+// --- PANTALLA DE DETALLE ---
 import 'checklist_detail_screen.dart';
 
 class ChecklistScreen extends StatefulWidget {
-  // ... (Constructor igual)
   final String lineaId;
   final String piqueteId;
   const ChecklistScreen({
@@ -61,7 +60,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
             padding: const EdgeInsets.all(8.0),
             itemCount: checklists.length,
             itemBuilder: (context, index) {
-              final checklist = checklists[index]; // Este es el Map<String, dynamic>
+              final checklist = checklists[index];
 
               final fechaHora = (checklist['FechaHora'] as Timestamp?)?.toDate();
               final fechaFormateada = fechaHora != null
@@ -84,7 +83,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
                   subtitle: Text(notas, maxLines: 2, overflow: TextOverflow.ellipsis),
                   trailing: const Icon(Icons.arrow_forward_ios),
 
-                  // --- 2. ACTUALIZAR NAVEGACIÓN ---
+                  // --- ACTUALIZAR NAVEGACIÓN ---
                   onTap: () {
                     Navigator.push(
                       context,

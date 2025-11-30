@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/database_service.dart';
 import 'piquetes_screen.dart';
-import '../utils/constants.dart'; // Importa las listas de tensiones y municipios
+import '../utils/constants.dart';
 
-// 1. Convertido a StatefulWidget para manejar el estado de los filtros
 class LineasScreen extends StatefulWidget {
   const LineasScreen({super.key});
 
@@ -14,7 +13,7 @@ class LineasScreen extends StatefulWidget {
 class _LineasScreenState extends State<LineasScreen> {
   final DatabaseService _dbService = DatabaseService();
 
-  // --- 2. ESTADO DE LOS FILTROS ---
+  // --- ESTADO DE LOS FILTROS ---
   double? _selectedTension;
   String? _selectedMunicipio;
 
@@ -28,10 +27,10 @@ class _LineasScreenState extends State<LineasScreen> {
       ),
       body: Column(
         children: [
-          // --- 3. BARRA DE FILTROS ---
+          // --- BARRA DE FILTROS ---
           _buildFilterBar(),
 
-          // --- 4. LISTA DE LÍNEAS (AHORA EXPANDIDA) ---
+          // --- LISTA DE LÍNEAS  ---
           Expanded(
             child: StreamBuilder<List<Map<String, dynamic>>>(
               stream: _dbService.getLineasElectricas(),
@@ -57,7 +56,7 @@ class _LineasScreenState extends State<LineasScreen> {
                   );
                 }
 
-                // --- 5. LÓGICA DE FILTRADO (CLIENT-SIDE) ---
+                // --- LÓGICA DE FILTRADO  ---
                 final filteredLineas = allLineas.where((linea) {
                   // Comprobar Tensión
                   final bool tensionMatch = _selectedTension == null ||
@@ -84,12 +83,12 @@ class _LineasScreenState extends State<LineasScreen> {
                   );
                 }
 
-                // --- 6. LISTVIEW USA LA LISTA FILTRADA ---
+                // --- LISTVIEW USA LA LISTA FILTRADA ---
                 return ListView.builder(
                   padding: const EdgeInsets.all(8.0),
-                  itemCount: filteredLineas.length, // Usa la lista filtrada
+                  itemCount: filteredLineas.length,
                   itemBuilder: (context, index) {
-                    final linea = filteredLineas[index]; // Usa la lista filtrada
+                    final linea = filteredLineas[index];
                     final lineaId = linea['ID_legible'] ?? 'Sin ID';
                     final tension = linea['Tension']?.toString() ?? '?';
                     final municipiosList = (linea['Municipio'] as List<dynamic>?) ?? [];
@@ -138,7 +137,6 @@ class _LineasScreenState extends State<LineasScreen> {
     );
   }
 
-  /// Widget que construye la UI de los filtros
   Widget _buildFilterBar() {
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -147,7 +145,7 @@ class _LineasScreenState extends State<LineasScreen> {
         children: [
           // --- FILTRO DE TENSIÓN ---
           Expanded(
-            child: DropdownButtonHideUnderline( // Oculta la línea de abajo
+            child: DropdownButtonHideUnderline(
               child: DropdownButton<double>(
                   value: _selectedTension,
                   hint: const Text('Tensión'),
@@ -171,7 +169,6 @@ class _LineasScreenState extends State<LineasScreen> {
                         children: [
                           Text('$tension kV'),
                           if (_selectedTension == tension)
-                          // Usamos InkWell para un área de toque más grande
                             InkWell(
                               child: const Padding(
                                 padding: EdgeInsets.all(4.0),
@@ -234,12 +231,12 @@ class _LineasScreenState extends State<LineasScreen> {
     );
   }
 
-  // --- El formulario _showAddLineaDialog (con corrección de lints) ---
+  // --- El formulario  ---
   void _showAddLineaDialog(BuildContext context) {
     final idController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    // Variables locales (sin guion bajo)
+    // Variables locales
     double? selectedTension;
     String? selectedMunicipioOrigen;
     String? selectedMunicipioDestino;

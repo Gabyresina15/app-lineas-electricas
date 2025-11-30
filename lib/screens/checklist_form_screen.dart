@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/database_service.dart';
-
-// --- 1. IMPORTAR LAS CONSTANTES ---
 import '../utils/constants.dart';
 
 class ChecklistFormScreen extends StatefulWidget {
-  // ... (Constructor igual)
   final String lineaId;
   final String piqueteId;
   const ChecklistFormScreen({
@@ -23,10 +20,7 @@ class _ChecklistFormScreenState extends State<ChecklistFormScreen> {
   final DatabaseService _dbService = DatabaseService();
   final _formKey = GlobalKey<FormState>();
 
-  // --- 2. ELIMINAR EL MAPA LOCAL DE CÓDIGOS ---
-  // final Map<int, String> _availableCodes = { ... }; // (ELIMINADO)
-
-  // ... (El resto de los estados y controladores siguen igual) ...
+  // --- ELIMINAR EL MAPA LOCAL DE CÓDIGOS ---
   String _selectedPhase = 'R';
   final _notasController = TextEditingController();
   final Set<int> _selectedCodesR = {};
@@ -39,12 +33,6 @@ class _ChecklistFormScreenState extends State<ChecklistFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ... (El build() y el formulario principal siguen igual) ...
-    // ... (El SegmentedButton sigue igual) ...
-
-    // (Solo necesitas asegurarte de que _buildFaseInput() usa K_AVAILABLE_CODES)
-
-    // ... (El resto del build sigue igual) ...
     return Scaffold(
       appBar: AppBar(
         title: Text('Nuevo Reporte: ${widget.piqueteId}'),
@@ -194,7 +182,6 @@ class _ChecklistFormScreenState extends State<ChecklistFormScreen> {
     );
   }
 
-  // ... (El método _submitForm() sigue igual) ...
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       return;

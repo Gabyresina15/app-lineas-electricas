@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../utils/constants.dart';
+import 'pdf_preview_screen.dart';
 
 class ChecklistDetailScreen extends StatelessWidget {
   final Map<String, dynamic> checklistData;
@@ -23,11 +24,28 @@ class ChecklistDetailScreen extends StatelessWidget {
         title: const Text('Detalle de Reporte'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
+        actions: [
+          // --- BOTÓN PARA VER PDF (VISTA PREVIA) ---
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf),
+            tooltip: 'Ver Comprobante PDF',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PdfPreviewScreen(
+                    checklistData: checklistData,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // --- Tarjeta 1: Información General ---
+          // --- Información General ---
           Card(
             elevation: 3.0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -68,7 +86,7 @@ class ChecklistDetailScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // --- Tarjeta 2: Detalle de Fases ---
+          // --- Detalle de Fases ---
           Card(
             elevation: 3.0,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -86,14 +104,20 @@ class ChecklistDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const Divider(),
-                  ...reporteFases.map((fase) {
-                    final faseData = fase as Map<String, dynamic>;
-                    return _buildPhaseDetail(
-                      faseNombre: faseData['fase'] ?? 'N/A',
-                      severidad: faseData['severidad_fase'] ?? 0,
-                      codigos: (faseData['codigos_encontrados'] as List<dynamic>?) ?? [],
-                    );
-                  }).toList(),
+                  if (reporteFases.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("No hay datos de fases registrados."),
+                    )
+                  else
+                    ...reporteFases.map((fase) {
+                      final faseData = fase as Map<String, dynamic>;
+                      return _buildPhaseDetail(
+                        faseNombre: faseData['fase'] ?? 'N/A',
+                        severidad: faseData['severidad_fase'] ?? 0,
+                        codigos: (faseData['codigos_encontrados'] as List<dynamic>?) ?? [],
+                      );
+                    }).toList(),
                 ],
               ),
             ),
@@ -103,32 +127,43 @@ class ChecklistDetailScreen extends StatelessWidget {
     );
   }
 
-  /// Widget auxiliar para mostrar el detalle de una fase
   Widget _buildPhaseDetail({required String faseNombre, required int severidad, required List<dynamic> codigos}) {
 
-    // Busca las descripciones de los códigos
+    // Genera el texto de los códigos con sus descripciones
     final codigosString = codigos.isEmpty
         ? 'Sin códigos reportados.'
         : codigos.map((code) {
-      // --- 2. USAR EL NUEVO NOMBRE 'availableCodes' ---
       final description = availableCodes[code] ?? '(Código desconocido)';
       return '• $code $description';
-    }).join('\n'); // Un código por línea
+    }).join('\n');
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Título de la Fase
           Text(
             'Fase $faseNombre',
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          Text(
-            'Severidad: $severidad / 5',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+
+          // Muestra la severidad de la fases
+          Row(
+            children: [
+              const Text('Severidad: ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: severidad > 0 ? Colors.orange[100] : Colors.green[100],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text('$severidad / 5', style: const TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ],
           ),
+
           const SizedBox(height: 8),
           const Text(
             'Códigos Reportados:',
